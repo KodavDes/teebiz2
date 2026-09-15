@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blue Mound Tee Co. (teebiz2)
 
-## Getting Started
+Next.js storefront: upload a design → Stripe Checkout (card / Apple Pay) → Printful draft order.
 
-First, run the development server:
+See [SPEC.md](./SPEC.md) for architecture and out-of-scope notes.
+
+## Quick start
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Local Stripe webhooks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
 
-## Learn More
+Put the printed `whsec_…` into `STRIPE_WEBHOOK_SECRET`.
 
-To learn more about Next.js, take a look at the following resources:
+### Design storage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Dev:** local disk under `uploads/` (served at `/api/files/...`).
+- **Prod:** set `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` (and usually `S3_ENDPOINT` + `S3_PUBLIC_URL` for Cloudflare R2). Hostinger Node disks are typically not durable across deploys.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Local development |
+| `npm run build` | Production build |
+| `npm run start` | Serve build (binds to `PORT` when set) |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy notes (Hostinger)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use Hostinger’s **Node.js** GitHub / archive deploy (not the generic static Git feature). Set env vars in hPanel before first traffic: `STRIPE_*`, `PRINTFUL_API_KEY`, `NEXT_PUBLIC_BASE_URL`, and S3 vars for uploads. Apple Pay needs the production domain verified in Stripe.

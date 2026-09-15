@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #f5f2eb;
+  --panel: #efe9dc;
+  --ink: #1c1c1a;
+  --olive: #5c6b3a;
+  --olive-deep: #3d4a28;
+  --background: var(--cream);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--olive) 35%, white);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dash-draw {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.7s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: rise-in 0.8s ease-out 0.12s both;
+}
+
+.animate-rise-delay-2 {
+  animation: rise-in 0.85s ease-out 0.24s both;
+}
+
+.hero-mark path,
+.hero-mark circle,
+.hero-mark line {
+  stroke-dasharray: 120;
+  animation: dash-draw 1.4s ease-out both;
 }

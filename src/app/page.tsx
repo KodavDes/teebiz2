@@ -1,69 +1,66 @@
-import Image from "next/image";
+import Link from "next/link";
+import { LabMark } from "@/components/SiteChrome";
+import { ProductRow } from "@/components/ProductRow";
+import { getCatalog } from "@/lib/catalog";
 
-export default function Home() {
+export default function HomePage() {
+  const catalog = getCatalog();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div>
+      <section className="relative overflow-hidden border-b border-dashed border-[var(--olive)]/35">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+          <div>
+            <p className="animate-rise font-mono text-[11px] tracking-[0.28em] text-[var(--olive)] uppercase">
+              Blue Mound Lab
+            </p>
+            <h1 className="animate-rise-delay mt-4 font-[family-name:var(--font-display)] text-6xl leading-[0.92] tracking-wide text-[var(--ink)] uppercase sm:text-7xl lg:text-8xl">
+              Blue Mound
+              <br />
+              Tee Co.
+            </h1>
+            <p className="animate-rise-delay-2 mt-6 max-w-md font-mono text-sm leading-relaxed text-[var(--ink)]/65 sm:text-base">
+              Upload your mark. We lock the placement, take payment, and send a
+              draft to Printful for on-demand print and ship.
+            </p>
+            <div className="animate-rise-delay-2 mt-8 flex flex-wrap gap-3">
+              <a
+                href="#catalog"
+                className="bg-[var(--olive)] px-5 py-3 font-[family-name:var(--font-display)] text-lg tracking-[0.14em] text-[var(--cream)] uppercase transition-opacity hover:opacity-90"
+              >
+                Shop garments
+              </a>
+              <Link
+                href={`/product/${catalog[0]?.slug ?? "classic-tee"}`}
+                className="border border-dashed border-[var(--olive)]/55 px-5 py-3 font-[family-name:var(--font-display)] text-lg tracking-[0.14em] text-[var(--ink)] uppercase transition-colors hover:border-[var(--olive)]"
+              >
+                Start with a tee
+              </Link>
+            </div>
+          </div>
+
+          <div className="animate-rise-delay relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
+            <div className="absolute inset-6 border border-dashed border-[var(--olive)]/40" />
+            <LabMark className="hero-mark h-44 w-44 text-[var(--olive)] sm:h-52 sm:w-52" />
+          </div>
+        </div>
+      </section>
+
+      <section id="catalog" className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+        <div className="mb-6">
+          <p className="font-mono text-[10px] tracking-[0.24em] text-[var(--olive)] uppercase">
+            Catalog
           </p>
+          <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-wide text-[var(--ink)] uppercase sm:text-4xl">
+            Garments
+          </h2>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="border-y border-dashed border-[var(--olive)]/40">
+          {catalog.map((product) => (
+            <ProductRow key={product.id} product={product} />
+          ))}
         </div>
-      </main>
+      </section>
     </div>
   );
 }
