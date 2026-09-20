@@ -43,6 +43,31 @@ export function toPrintfulExternalId(sessionId: string): string {
   return cleaned.slice(-32);
 }
 
+export async function findPrintfulOrderByExternalId(
+  externalId: string,
+): Promise<unknown | null> {
+  const apiKey = process.env.PRINTFUL_API_KEY;
+  if (!apiKey) {
+    throw new Error("PRINTFUL_API_KEY is not set");
+  }
+
+  const res = await fetch(
+    `https://api.printful.com/orders/@${toPrintfulExternalId(externalId)}`,
+    { headers: { Authorization: `Bearer ${apiKey}` } },
+  );
+
+  if (res.status === 404) return null;
+
+  const data = (await res.json()) as PrintfulResponse;
+  if (!res.ok) {
+    const message =
+      data.error?.message || data.error?.reason || `Printful HTTP ${res.status}`;
+    throw new Error(message);
+  }
+
+  return data.result ?? null;
+}
+
 export async function createPrintfulDraftOrder(
   input: CreatePrintfulDraftOrderInput,
 ): Promise<unknown> {
@@ -50,6 +75,9 @@ export async function createPrintfulDraftOrder(
   if (!apiKey) {
     throw new Error("PRINTFUL_API_KEY is not set");
   }
+
+  const existing = await findPrintfulOrderByExternalId(input.externalId);
+  if (existing) return existing;
 
   const body = {
     external_id: toPrintfulExternalId(input.externalId),
