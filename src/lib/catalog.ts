@@ -60,8 +60,8 @@ const SIZES: CatalogSize[] = [
 ];
 
 const TEE_COLORS: CatalogColor[] = [
-  { id: "natural", name: "Natural", hex: "#fef1d1" },
   { id: "olive", name: "Olive", hex: "#5b642f" },
+  { id: "natural", name: "Natural", hex: "#fef1d1" },
   { id: "ink", name: "Ink", hex: "#0c0c0c" },
   { id: "bone", name: "Bone", hex: "#e7d4c0" },
 ];
